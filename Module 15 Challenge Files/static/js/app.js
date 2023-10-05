@@ -7,7 +7,7 @@ function init(){
 
     let selector = d3.select("#selDataset");
     d3.json(url).then((data) => {
-        
+
         let sampleNames = data.names;
 
         // loop through "names" from data, add to selector
@@ -19,12 +19,37 @@ function init(){
         };
 
         let firstSample = sampleNames[0];
-        buildCharts(firstSample);
-        SampleMetaData(firstSample);
+        // buildCharts(firstSample);
+        metaData(firstSample);
 
     });
 };
 
 // initialize dashboard
 init();
+
+
+function metaData(sample){
+    d3.json(url).then((data) => {
+
+        let metadata = data.metadata;
+        let resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
+        let result = resultArray[0];
+        let demographicInfo = d3.select("#sample-metadata");
+
+        demographicInfo.html("");
+
+        for (key in result){
+            demographicInfo.append("h6").text(`${key.toUpperCase()}: ${result[key]}`);
+        }
+    });
+}
+
+function charts(){
+    d3.json(url).then((data) => {
+
+        let sample = data.samples;
+       
+    });
+};
 
