@@ -19,7 +19,7 @@ function init(){
         };
 
         let firstSample = sampleNames[0];
-        // buildCharts(firstSample);
+        buildCharts(firstSample);
         metaData(firstSample);
 
     });
@@ -45,11 +45,45 @@ function metaData(sample){
     });
 }
 
-function charts(){
-    d3.json(url).then((data) => {
 
-        let sample = data.samples;
-       
+function buildCharts(sample){
+    
+    d3.json(url).then((data) => {
+        let samples = data.samples;
+        let resultArray = samples.filter(sampleObj => sampleObj.id == sample);
+        let result = resultArray[0];
+        let otuIds = result.otu_ids;
+        let otuLabels = result.otu_labels;
+        let sampleValues = result.sample_values;
+
+
+        // build bar chart
+
+        let barData = [{
+
+                x: sampleValues.slice(0,10).reverse(),
+                y: otuIds.slice(0,10).map(otuID => `OTU ${otuID}`).reverse(),
+                text: otuLabels.slice(0,10).reverse(),
+                type: "bar",
+                orientation: "h",
+        
+        }];
+
+        let barLayout = {
+            title: "Top 10 Operational Taxonomic Units (OTUs)",
+            xaxis: {title: "Sample Values"},
+            margin : {t:40, l: 120}
+        };
+
+        Plotly.newPlot("bar", barData, barLayout);
+
     });
 };
 
+// new sample data from test subjects
+function optionChanged(newSample) {
+    
+    buildCharts(newSample);
+    metaData(newSample);
+
+};
