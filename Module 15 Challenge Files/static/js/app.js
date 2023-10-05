@@ -59,7 +59,7 @@ function buildCharts(sample){
 
         // build bar chart
 
-        let barData = [{
+        let barChart = [{
 
                 x: sampleValues.slice(0,10).reverse(),
                 y: otuIds.slice(0,10).map(otuID => `OTU ${otuID}`).reverse(),
@@ -75,7 +75,35 @@ function buildCharts(sample){
             margin : {t:40, l: 120}
         };
 
-        Plotly.newPlot("bar", barData, barLayout);
+        Plotly.newPlot("bar", barChart, barLayout);
+
+
+        // bubble chart
+
+        let bubbleChart = [{
+            
+            x: otuIds,
+            y: sampleValues,
+            text: otuLabels,
+            mode: "markers",
+            marker: {
+                size: sampleValues,
+                color: otuIds,
+                colorscale: "Earth"
+            }
+
+        }];
+
+        let bubbleLayout = {
+            title: "OTUs by Sample Size",
+            margin: {t:0},
+            hovermode: "closest",
+            xaxis: {title: "OTU IDs"},
+            yaxis: {title: "Sample Values"},
+            margin: {t:30}
+        };
+
+        Plotly.newPlot("bubble", bubbleChart, bubbleLayout);
 
     });
 };
